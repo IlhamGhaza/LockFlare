@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'presentation/home_page.dart';
+import 'package:skti_gundar/main_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,7 +31,7 @@ class MyApp extends StatelessWidget {
         cardColor: Colors.white,
         scaffoldBackgroundColor: Colors.grey[50],
       ),
-      home: const HomePage(),
+      home: const MainPage(),
     );
   }
 }

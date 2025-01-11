@@ -21,8 +21,7 @@ class _HomePageState extends State<HomePage> {
   String _outputText = '';
   bool _isProcessing = false;
 
-
- void _process() async{
+  void _process() async {
     if (_inputController.text.isEmpty) {
       setState(() {
         _outputText = "Masukkan teks terlebih dahulu.";
@@ -40,56 +39,70 @@ class _HomePageState extends State<HomePage> {
       _isProcessing = true;
     });
 
+    if (_keyController.text.isEmpty &&
+        _selectedAlgorithm!.contains("Hill Cipher")) {
+      setState(() {
+        _outputText = "Masukkan key (9 angka) untuk Hill Cipher.";
+      });
+      return;
+    }
+
     // Simulasi waktu pemrosesan
     await Future.delayed(Duration(seconds: 2));
 
     String input = _inputController.text;
-    String key = _keyController.text;
+    String keyInput = _keyController.text;
+    String result = "";
 
-    switch (_selectedAlgorithm) {
-      case 'Substitusi + Permutasi':
-        final algorithm =
-            SubstitutionAndPermutation('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-        _outputText = algorithm.encrypt(input);
-        break;
-      case 'Permutasi + Compaction':
-        final algorithm = PermutationAndCompaction();
-        _outputText = algorithm.encrypt(input);
-        break;
-      case 'Blocking + Substitusi':
-        final algorithm = BlockingAndSubstitution('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-        _outputText = algorithm.encrypt(input);
-        break;
-      case 'Hill Cipher (2x2)':
-        final algorithm = HillCipher2([
-          [2, 3],
-          [1, 4],
-        ]);
-        _outputText = algorithm.encrypt(input);
-        break;
-      case 'Hill Cipher (3x3)':
-        final algorithm = HillCipher3([
-          [2, 4, 5],
-          [9, 2, 1],
-          [3, 17, 7],
-        ]);
-        _outputText = algorithm.encrypt(input);
-        break;
-      case 'Substitusi + Compaction':
-        final algorithm =
-            SubstitutionAndCompaction('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-        _outputText = algorithm.encrypt(input);
-        break;
-      default:
-        _outputText = "Algoritma tidak dikenali.";
+    try {
+      switch (_selectedAlgorithm) {
+        case 'Substitusi + Permutasi':
+          final algorithm =
+              SubstitutionAndPermutation('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+          _outputText = algorithm.encrypt(input);
+          break;
+        case 'Permutasi + Compaction':
+          final algorithm = PermutationAndCompaction();
+          _outputText = algorithm.encrypt(input);
+          break;
+        case 'Blocking + Substitusi':
+          final algorithm =
+              BlockingAndSubstitution('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+          _outputText = algorithm.encrypt(input);
+          break;
+        case 'Hill Cipher (2x2)':
+          final hillCipher = HillCipher2(keyInput);
+          result = hillCipher.encrypt(input);
+          _outputText = hillCipher.encrypt(input);
+          break;
+        case 'Hill Cipher (3x3)':
+          final hillCipher = HillCipher3(keyInput);
+          result = hillCipher.encrypt(input);
+          // final algorithm = HillCipher3([
+          //   [2, 4, 5],
+          //   [9, 2, 1],
+          //   [3, 17, 7],
+          // ]);
+
+          _outputText = hillCipher.encrypt(input);
+          break;
+        case 'Substitusi + Compaction':
+          final algorithm =
+              SubstitutionAndCompaction('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+          _outputText = algorithm.encrypt(input);
+          break;
+        default:
+          _outputText = "Algoritma tidak dikenali.";
+      }
+    } catch (e) {
+      result = "Error: ${e.toString()}";
     }
 
-     setState(() {
+    setState(() {
       _isProcessing = false;
       _outputText;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -220,7 +233,7 @@ class _HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                 child: _isProcessing
+                child: _isProcessing
                     ? CircularProgressIndicator(color: Colors.white)
                     : Text(
                         "Proses",

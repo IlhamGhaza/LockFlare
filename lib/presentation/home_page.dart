@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../data/blocking_subtitotion.dart';
 import '../data/hill_chipper2.dart';
 import '../data/hill_chipper3.dart';
@@ -59,17 +58,23 @@ class _HomePageState extends State<HomePage> {
         case 'Substitusi + Permutasi':
           final algorithm =
               SubstitutionAndPermutation('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-          _outputText = algorithm.encrypt(input);
+          String hexResult = algorithm
+              .encrypt(input); // Enkripsi menghasilkan hasil hexadecimal
+          String inversText = algorithm.decrypt(hexResult); // Opsional: Inversi
+          _outputText = "Hasil Hexa: $hexResult\nHasil Invers: $inversText";
           break;
+
         case 'Permutasi + Compaction':
           final algorithm = PermutationAndCompaction();
           _outputText = algorithm.encrypt(input);
           break;
+
         case 'Blocking + Substitusi':
           final algorithm =
               BlockingAndSubstitution('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
           _outputText = algorithm.encrypt(input);
           break;
+
         case 'Hill Cipher (2x2)':
           final hillCipher = HillCipher2(keyInput);
           result = hillCipher.encrypt(input);
@@ -80,11 +85,13 @@ class _HomePageState extends State<HomePage> {
           result = hillCipher.encrypt(input);
           _outputText = hillCipher.encrypt(input);
           break;
+
         case 'Substitusi + Compaction':
           final algorithm =
               SubstitutionAndCompaction('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
           _outputText = algorithm.encrypt(input);
           break;
+          
         default:
           _outputText = "Algoritma tidak dikenali.";
       }

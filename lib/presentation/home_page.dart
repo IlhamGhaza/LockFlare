@@ -78,12 +78,6 @@ class _HomePageState extends State<HomePage> {
         case 'Hill Cipher (3x3)':
           final hillCipher = HillCipher3(keyInput);
           result = hillCipher.encrypt(input);
-          // final algorithm = HillCipher3([
-          //   [2, 4, 5],
-          //   [9, 2, 1],
-          //   [3, 17, 7],
-          // ]);
-
           _outputText = hillCipher.encrypt(input);
           break;
         case 'Substitusi + Compaction':
@@ -108,13 +102,18 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Modern Cryptography'),
+        title: Text(
+          'Modern Cryptography',
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
         elevation: 0,
+        backgroundColor:
+            Theme.of(context).colorScheme.primary, // Sesuai dengan tema
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -122,12 +121,13 @@ class _HomePageState extends State<HomePage> {
 
               // Input Section
               Card(
-                elevation: 3,
+                elevation: 8,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                 ),
+                color: Theme.of(context).cardColor, // Sesuai dengan warna tema
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -135,8 +135,12 @@ class _HomePageState extends State<HomePage> {
                       Text(
                         "Masukkan Teks:",
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w500,
                           fontSize: 16,
+                          color: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .color, // Sesuai dengan tema
                         ),
                       ),
                       SizedBox(height: 8),
@@ -146,7 +150,9 @@ class _HomePageState extends State<HomePage> {
                         decoration: InputDecoration(
                           hintText: "Masukkan teks di sini...",
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
                           ),
                         ),
                       ),
@@ -156,8 +162,9 @@ class _HomePageState extends State<HomePage> {
                       Text(
                         "Masukkan Kunci (Opsional):",
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w500,
                           fontSize: 16,
+                          color: Theme.of(context).textTheme.bodyLarge!.color,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -166,7 +173,9 @@ class _HomePageState extends State<HomePage> {
                         decoration: InputDecoration(
                           hintText: "Masukkan kunci jika diperlukan...",
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
                           ),
                         ),
                       ),
@@ -174,24 +183,26 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 24),
 
               // Dropdown Section
               Card(
-                elevation: 3,
+                elevation: 8,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                 ),
+                color: Theme.of(context).cardColor,
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
                         "Pilih Algoritma:",
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w500,
                           fontSize: 16,
+                          color: Theme.of(context).textTheme.bodyLarge!.color,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -222,7 +233,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 24),
 
               // Process Button
               ElevatedButton(
@@ -230,8 +241,11 @@ class _HomePageState extends State<HomePage> {
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(12),
                   ),
+                  iconColor:
+                      Theme.of(context).primaryColor, // Sesuai dengan tema
+                  elevation: 5,
                 ),
                 child: _isProcessing
                     ? CircularProgressIndicator(color: Colors.white)
@@ -240,24 +254,26 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(fontSize: 18),
                       ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 24),
 
               // Output Section
               Card(
-                elevation: 3,
+                elevation: 8,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                 ),
+                color: Theme.of(context).cardColor,
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
                         "Hasil:",
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w500,
                           fontSize: 16,
+                          color: Theme.of(context).textTheme.bodyLarge!.color,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -267,7 +283,7 @@ class _HomePageState extends State<HomePage> {
                             : _outputText,
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.black87,
+                          color: Theme.of(context).textTheme.bodyLarge!.color,
                         ),
                       ),
                     ],

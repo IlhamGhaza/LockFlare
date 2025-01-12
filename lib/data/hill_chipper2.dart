@@ -53,7 +53,7 @@ class HillCipher2{
       return acc;
     });
 
-    steps +=("Convert to Numerical: $plaintextNumerical");
+    steps +=("\nConvert to Numerical: $plaintextNumerical");
 
     // Bagi plaintext menjadi blok 2 elemen
     List<List<int>> blocks = [];
@@ -93,7 +93,7 @@ class HillCipher2{
     }
 
     String ciphertext = ciphertextBlocks.join();
-    steps +=("Ciphertext: $ciphertext");
+    steps +=("\nCiphertext: $ciphertext");
     return ciphertext;
   }
 }

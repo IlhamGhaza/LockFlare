@@ -1,6 +1,8 @@
 # SKTI Gundar
 
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/IlhamGhaza){:target="_blank"}
+<a href="https://www.buymeacoffee.com/IlhamGhaza" target="_blank">
+    <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee">
+</a></br>
 
 SKTI Gundar is a Flutter application designed to implement and demonstrate various cryptographic algorithms and techniques. This project aims to educate users about different encryption methods by providing practical implementations within a mobile application.
 

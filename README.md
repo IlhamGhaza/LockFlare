@@ -114,5 +114,5 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 For further information or inquiries, please contact:
 
 - **Name**: Ilham Ghaza
-- **Email**: [email](mailto:cb7ezeur@selenakuyang.anonaddy.com).
-Project Repository: [https://github.com/IlhamGhaza/skti_gundar](https://github.com/IlhamGhaza/skti_gundar)
+- **Email**: [email](mailto:cb7ezeur@selenakuyang.anonaddy.com). <br>
+<!-- Project Repository: [https://github.com/IlhamGhaza/skti_gundar](https://github.com/IlhamGhaza/skti_gundar) -->

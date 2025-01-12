@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:math' as math;
 import '../config/theme/bloc/theme_cubit.dart';
@@ -23,6 +24,7 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _keyController = TextEditingController();
   String? _selectedAlgorithm;
   String _outputText = '';
+  String _steps = '';
   bool _isProcessing = false;
 
   void _process() async {
@@ -80,6 +82,8 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       _isProcessing = true;
+      _outputText = '';
+      _steps = '';
     });
 
     // Bersihkan input dan key dari spasi berlebih
@@ -116,6 +120,7 @@ class _HomePageState extends State<HomePage> {
                   "Biner Input: $binaryInput\n"
                   "Hasil Hexa: $encrypted\n"
                   "Hasil Invers: $decrypted";
+              _steps = sp.steps;
             });
           } catch (e) {
             // Tangani error jika terjadi
@@ -137,6 +142,7 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             _outputText =
                 "Biner Input: $binaryInput\nHasil Compacting: $compacted";
+                _steps = pc.steps;
           });
           break;
 
@@ -149,6 +155,7 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             _outputText =
                 "Biner Input: $binaryInput\nHasil Substitusi: $substituted";
+                _steps = bs.steps;
           });
           break;
 
@@ -157,6 +164,7 @@ class _HomePageState extends State<HomePage> {
           result = hillCipher.encrypt(input);
           setState(() {
             _outputText = "Hasil Hill Cipher (2x2): $result";
+            _steps = hillCipher.steps;
           });
           break;
 
@@ -165,6 +173,7 @@ class _HomePageState extends State<HomePage> {
           result = hillCipher.encrypt(input);
           setState(() {
             _outputText = "Hasil Hill Cipher (3x3): $result";
+            _steps = hillCipher.steps;
           });
           break;
 
@@ -177,6 +186,7 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             _outputText =
                 "Biner Input: $binaryInput\nHasil Compacting: $compacted";
+            _steps = sc.steps;
           });
           break;
 
@@ -189,11 +199,11 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         _outputText = "Error: ${e.toString()}";
       });
+    } finally {
+      setState(() {
+        _isProcessing = false;
+      });
     }
-
-    setState(() {
-      _isProcessing = false;
-    });
   }
 
   // Fungsi dialog adaptif untuk berbagai platform
@@ -263,7 +273,8 @@ class _HomePageState extends State<HomePage> {
                         Positioned.fill(
                           child: CustomPaint(
                             painter: BackgroundPatternPainter(
-                              color: theme.colorScheme.onPrimary.withOpacity(0.1),
+                              color:
+                                  theme.colorScheme.onPrimary.withOpacity(0.1),
                             ),
                           ),
                         ),
@@ -293,7 +304,8 @@ class _HomePageState extends State<HomePage> {
                           // Input Section
                           Card(
                             elevation: 4,
-                            shadowColor: theme.colorScheme.shadow.withOpacity(0.1),
+                            shadowColor:
+                                theme.colorScheme.shadow.withOpacity(0.1),
                             child: Container(
                               padding: const EdgeInsets.all(20.0),
                               decoration: BoxDecoration(
@@ -343,34 +355,74 @@ class _HomePageState extends State<HomePage> {
                                     keyboardType: TextInputType.text,
                                     textInputAction: TextInputAction.next,
                                   ),
-                                  const SizedBox(height: 16),
+                                  const SizedBox(
+                                    height: 16,
+                                  ),
                                   TextField(
                                     controller: _keyController,
                                     maxLength: _selectedAlgorithm
                                                 ?.contains("Hill Cipher") ??
                                             false
-                                        ? null
+                                        ? (_selectedAlgorithm!.contains("3x3")
+                                            ? 9
+                                            : 4)
                                         : 8,
                                     decoration: InputDecoration(
                                       hintText: _selectedAlgorithm
                                                   ?.contains("Hill Cipher") ??
                                               false
-                                          ? "Enter key here..."
-                                          : "Enter key (max 8 characters)...",
+                                          ? "Masukkan key berupa angka..."
+                                          : "Masukkan key (max 8 karakter)...",
                                       counterText: _selectedAlgorithm
                                                   ?.contains("Hill Cipher") ??
                                               false
-                                          ? null
-                                          : "Max 8 characters",
+                                          ? (_keyController.text.length >=
+                                                  (_selectedAlgorithm!
+                                                          .contains("3x3")
+                                                      ? 9
+                                                      : 4)
+                                              ? "Sudah mencapai maksimum input!"
+                                              : null)
+                                          : "Max 8 karakter",
                                       border: OutlineInputBorder(),
                                       // Add these properties for better web compatibility
                                       isDense: true,
                                       contentPadding: EdgeInsets.symmetric(
                                           horizontal: 12, vertical: 14),
                                     ),
-                                    // Add these properties for better web input handling
-                                    keyboardType: TextInputType.text,
+                                    keyboardType: TextInputType.number,
                                     textInputAction: TextInputAction.done,
+                                    inputFormatters: [
+                                      // Filter hanya angka
+                                      FilteringTextInputFormatter.digitsOnly,
+                                      // Batasi panjang karakter sesuai algoritma
+                                      LengthLimitingTextInputFormatter(
+                                        _selectedAlgorithm
+                                                    ?.contains("Hill Cipher") ??
+                                                false
+                                            ? (_selectedAlgorithm!
+                                                    .contains("3x3")
+                                                ? 9
+                                                : 4)
+                                            : 8,
+                                      ),
+                                    ],
+                                    onChanged: (text) {
+                                      if (_selectedAlgorithm
+                                              ?.contains("Hill Cipher") ??
+                                          false) {
+                                        int maxLength =
+                                            _selectedAlgorithm!.contains("3x3")
+                                                ? 9
+                                                : 4;
+                                        if (text.length >= maxLength) {
+                                          setState(() {
+                                            _outputText =
+                                                "Key sudah mencapai maksimum ($maxLength angka untuk ${_selectedAlgorithm!.contains("3x3") ? "3x3" : "2x2"}).";
+                                          });
+                                        }
+                                      }
+                                    },
                                   ),
                                 ],
                               ),
@@ -382,7 +434,8 @@ class _HomePageState extends State<HomePage> {
                           // Algorithm Selection Section
                           Card(
                             elevation: 4,
-                            shadowColor: theme.colorScheme.shadow.withOpacity(0.1),
+                            shadowColor:
+                                theme.colorScheme.shadow.withOpacity(0.1),
                             child: Container(
                               padding: const EdgeInsets.all(20.0),
                               decoration: BoxDecoration(
@@ -476,7 +529,8 @@ class _HomePageState extends State<HomePage> {
                           // Output Section
                           Card(
                             elevation: 4,
-                            shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.1),
+                            shadowColor:
+                                theme.colorScheme.shadow.withValues(alpha: 0.1),
                             child: Container(
                               padding: const EdgeInsets.all(20.0),
                               decoration: BoxDecoration(
@@ -515,6 +569,56 @@ class _HomePageState extends State<HomePage> {
                                           ? "Results will appear here..."
                                           : _outputText,
                                       style: theme.textTheme.bodyLarge,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          Card(
+                            elevation: 4,
+                            shadowColor:
+                                theme.colorScheme.shadow.withOpacity(0.1),
+                            child: Container(
+                              padding: const EdgeInsets.all(20.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                color: theme.colorScheme.surface,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(Icons.list_alt,
+                                          color: theme.colorScheme.primary),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'Steps',
+                                        style: theme.textTheme.titleLarge,
+                                      ),
+                                    ],
+                                  ),
+                                  const Divider(height: 24),
+                                  Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: theme
+                                          .colorScheme.secondaryContainer
+                                          .withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: theme
+                                            .colorScheme.secondaryContainer
+                                            .withOpacity(0.2),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      _steps.isEmpty
+                                          ? "Steps will appear here after processing..."
+                                          : _steps,
+                                      style: theme.textTheme.bodyMedium,
                                     ),
                                   ),
                                 ],

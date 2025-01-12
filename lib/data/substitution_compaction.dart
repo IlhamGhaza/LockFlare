@@ -1,51 +1,52 @@
 class SubstitutionAndCompaction {
+  String steps = '';
   final String alphabet;
 
   SubstitutionAndCompaction(this.alphabet);
 
   /// Method untuk proses enkripsi
   String encrypt(String input) {
-    print("\n=== [Substitution + Compaction - Encrypt] ===");
-    print("Input original: $input");
+    steps +=("\n=== [Substitution + Compaction - Encrypt] ===");
+    steps +=("\nInput original: $input");
 
     // Handle padding untuk input < 8 karakter
     if (input.length < 8) {
       input = input.padRight(8, '0');
-      print("Input setelah padding: $input");
+      steps +=("\nInput setelah padding: $input");
     }
 
     // Konversi ke biner
     String binaryInput = _toBinary(input);
-    print("Biner Input: $binaryInput");
+    steps +=("\nBiner Input: $binaryInput");
 
     // Substitusi menggunakan S-box
     String substitutedBinary = _substitution(binaryInput);
-    print("Biner setelah substitusi: $substitutedBinary");
+    steps +=("\nBiner setelah substitusi: $substitutedBinary");
 
     // Kompaksi - ambil setengah dari hasil substitusi
     String compactedBinary =
         substitutedBinary.substring(0, substitutedBinary.length ~/ 2);
-    print("Hasil setelah kompaksi: $compactedBinary");
+    steps +=("\nHasil setelah kompaksi: $compactedBinary");
 
     return compactedBinary;
   }
 
   /// Method untuk proses dekripsi
   String decrypt(String compactedInput) {
-    print("\n=== [Substitution + Compaction - Decrypt] ===");
-    print("Input terenkripsi: $compactedInput");
+    steps +=("\n=== [Substitution + Compaction - Decrypt] ===");
+    steps +=("\nInput terenkripsi: $compactedInput");
 
     // Duplikasi data yang telah dikompaksi untuk mengembalikan ke ukuran asli
     String expandedBinary = compactedInput + compactedInput;
-    print("Biner setelah ekspansi: $expandedBinary");
+    steps +=("\nBiner setelah ekspansi: $expandedBinary");
 
     // Substitusi balik menggunakan S-box
     String decryptedBinary = _reverseSubstitution(expandedBinary);
-    print("Biner setelah substitusi balik: $decryptedBinary");
+    steps +=("\nBiner setelah substitusi balik: $decryptedBinary");
 
     // Konversi kembali ke teks
     String result = _binaryToText(decryptedBinary);
-    print("Hasil dekripsi: $result");
+    steps +=("\nHasil dekripsi: $result");
 
     return result;
   }
@@ -56,7 +57,7 @@ class SubstitutionAndCompaction {
 
   /// Private Method: Konversi teks ke biner
   String _toBinary(String text) {
-    print("Mengonversi teks ke biner...");
+    steps +=("\nMengonversi teks ke biner...");
     return text.codeUnits
         .map((char) => char.toRadixString(2).padLeft(8, '0'))
         .join();
@@ -64,7 +65,7 @@ class SubstitutionAndCompaction {
 
   /// Private Method: Konversi biner ke teks
   String _binaryToText(String binary) {
-    print("Mengonversi biner ke teks...");
+    steps +=("\nMengonversi biner ke teks...");
     List<String> chunks = _chunkString(binary, 8);
     return chunks
         .map((chunk) => String.fromCharCode(int.parse(chunk, radix: 2)))

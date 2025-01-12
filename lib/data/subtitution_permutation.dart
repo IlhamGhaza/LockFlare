@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 class SubstitutionAndPermutation {
   final String alphabet;
+  String steps = "";
 
   // S-box tables as per DES standard
   static final List<List<List<int>>> sBoxes = [
@@ -19,107 +20,107 @@ class SubstitutionAndPermutation {
 
   String encrypt(String input) {
     log('start');
-    print("\n=== [Substitution + Permutation - Encrypt] ===");
-    print("Input original: $input");
+    steps += ("\n=== [Substitution + Permutation - Encrypt] ===");
+    steps += ("\nInput original: $input");
 
     // Handle input padding
     if (input.length < 8) {
       input = input.padRight(8, '0');
-      print("Input setelah padding: $input");
+      steps += ("\nInput setelah padding: $input");
     } else if (input.length > 8) {
       input = input.substring(0, 8);
-      print("Input dipotong menjadi 8 karakter: $input");
+      steps += ("\nInput dipotong menjadi 8 karakter: $input");
     }
 
     // Convert to binary
     String binaryInput = _toBinary(input);
-    print("Biner Input: $binaryInput");
+    steps += ("\nBiner Input: $binaryInput");
 
     // Initial Permutation (IP)
     String permutedBinary = _initialPermutation(binaryInput);
-    print("Biner Setelah Initial Permutation: $permutedBinary");
+    steps += ("\nBiner Setelah Initial Permutation: $permutedBinary");
 
     // Split into left and right halves
     String left = permutedBinary.substring(0, 32);
     String right = permutedBinary.substring(32);
-    print("Left half: $left");
-    print("Right half: $right");
+    steps += ("\nLeft half: $left");
+    steps += ("\nRight half: $right");
 
     // Feistel network rounds (simplified to 2 rounds)
     for (int round = 1; round <= 2; round++) {
-      print("\nRound $round:");
+      steps += ("\nRound $round:");
       String temp = right;
       right = _xor(left, _feistelFunction(right, round));
       left = temp;
-      print("Left: $left");
-      print("Right: $right");
+      steps += ("\nLeft: $left");
+      steps += ("\nRight: $right");
     }
 
     // Final combination
     String combined = right + left; // Note the swap
-    print("\nCombined (RL): $combined");
+    steps += ("\nCombined (RL): $combined");
 
     // Final Permutation
     String finalBinary = _finalPermutation(combined);
-    print("Biner Setelah Final Permutation: $finalBinary");
+    steps += ("\nBiner Setelah Final Permutation: $finalBinary");
 
     // Convert to hex
     String hexResult = _binaryToHex(finalBinary);
-    print("Hasil Hexa: $hexResult");
+    steps += ("\nHasil Hexa: $hexResult");
 
     return hexResult;
   }
 
   String decrypt(String hexInput) {
-    print("\n=== [Substitution + Permutation - Decrypt] ===");
+    steps += ("\n=== [Substitution + Permutation - Decrypt] ===");
 
     // Convert hex to binary
     String binaryInput = _hexToBinary(hexInput);
-    print("Biner Input: $binaryInput");
+    steps += ("\nBiner Input: $binaryInput");
 
     // Ensure 64-bit length
     if (binaryInput.length < 64) {
       binaryInput = binaryInput.padLeft(64, '0');
-      print("Biner setelah padding: $binaryInput");
+      steps += ("\nBiner setelah padding: $binaryInput");
     }
 
     // Inverse Final Permutation
     String afterFinalPerm = _inverseFinalPermutation(binaryInput);
-    print("Biner Setelah Inverse Final Permutation: $afterFinalPerm");
+    steps += ("\nBiner Setelah Inverse Final Permutation: $afterFinalPerm");
 
     // Split into left and right halves
     String right = afterFinalPerm.substring(0, 32);
     String left = afterFinalPerm.substring(32);
-    print("Left half: $left");
-    print("Right half: $right");
+    steps += ("\nLeft half: $left");
+    steps += ("\nRight half: $right");
 
     // Reverse Feistel network rounds
     for (int round = 2; round >= 1; round--) {
-      print("\nReverse Round $round:");
+      steps += ("\nReverse Round $round:");
       String temp = left;
       left = _xor(right, _feistelFunction(left, round));
       right = temp;
-      print("Left: $left");
-      print("Right: $right");
+      steps += ("\nLeft: $left");
+      steps += ("\nRight: $right");
     }
 
     // Combine halves
     String combined = left + right;
-    print("\nCombined (LR): $combined");
+    steps += ("\nCombined (LR): $combined");
 
     // Inverse Initial Permutation
     String finalBinary = _inverseInitialPermutation(combined);
-    print("Biner Setelah Inverse Initial Permutation: $finalBinary");
+    steps += ("\nBiner Setelah Inverse Initial Permutation: $finalBinary");
 
     // Convert back to text
     String resultText = _binaryToText(finalBinary);
-    print("Teks Hasil Dekripsi: $resultText");
+    steps += ("\nTeks Hasil Dekripsi: $resultText");
 
     return resultText;
   }
 
   String _toBinary(String text) {
-    print("Mengonversi teks ke biner...");
+    steps += ("\nMengonversi teks ke biner...");
     String binary = text.codeUnits
         .map((char) => char.toRadixString(2).padLeft(8, '0'))
         .join();
@@ -127,7 +128,7 @@ class SubstitutionAndPermutation {
   }
 
   String _binaryToText(String binary) {
-    print("Mengonversi biner ke teks...");
+    steps += ("\nMengonversi biner ke teks...");
     List<String> chunks = _chunkString(binary, 8);
     return chunks
         .map((bin) => String.fromCharCode(int.parse(bin, radix: 2)))
@@ -135,7 +136,7 @@ class SubstitutionAndPermutation {
   }
 
   String _initialPermutation(String binary) {
-    print("Melakukan Initial Permutation...");
+    steps += ("\nMelakukan Initial Permutation...");
     List<int> ipTable = [
       58,
       50,
@@ -206,7 +207,7 @@ class SubstitutionAndPermutation {
   }
 
   String _inverseInitialPermutation(String binary) {
-    print("Melakukan Inverse Initial Permutation...");
+    steps += ("\nMelakukan Inverse Initial Permutation...");
     List<int> ipInverseTable = [
       40,
       8,
@@ -279,20 +280,20 @@ class SubstitutionAndPermutation {
   String _feistelFunction(String input, int round) {
     // Expansion
     String expanded = _expansion(input);
-    print("After expansion: $expanded");
+    steps += ("\nAfter expansion: $expanded");
 
     // Key mixing (simplified for demonstration)
     String roundKey = _generateRoundKey(round);
     String mixed = _xor(expanded, roundKey);
-    print("After key mixing: $mixed");
+    steps += ("\nAfter key mixing: $mixed");
 
     // S-box substitution
     String substituted = _sBoxSubstitution(mixed);
-    print("After S-box substitution: $substituted");
+    steps += ("\nAfter S-box substitution: $substituted");
 
     // P-box permutation
     String permuted = _pBoxPermutation(substituted);
-    print("After P-box permutation: $permuted");
+    steps += ("\nAfter P-box permutation: $permuted");
 
     return permuted;
   }
@@ -413,7 +414,7 @@ class SubstitutionAndPermutation {
   }
 
   String _finalPermutation(String binary) {
-    print("Melakukan Final Permutation...");
+    steps += ("\nMelakukan Final Permutation...");
     List<int> fpTable = [
       40,
       8,
@@ -484,7 +485,7 @@ class SubstitutionAndPermutation {
   }
 
   String _inverseFinalPermutation(String binary) {
-    print("Melakukan Inverse Final Permutation...");
+    steps += ("\nMelakukan Inverse Final Permutation...");
     List<int> fpInverseTable = [
       58,
       50,
@@ -582,7 +583,7 @@ class SubstitutionAndPermutation {
   }
 
   String _binaryToHex(String binary) {
-    print("Mengonversi biner ke heksadesimal...");
+    steps += ("\nMengonversi biner ke heksadesimal...");
     List<String> chunks = _chunkString(binary, 4);
     return chunks
         .map((chunk) =>
@@ -591,7 +592,7 @@ class SubstitutionAndPermutation {
   }
 
   String _hexToBinary(String hex) {
-    print("Mengonversi heksadesimal ke biner...");
+    steps += ("\nMengonversi heksadesimal ke biner...");
     return hex
         .split('')
         .map((char) =>

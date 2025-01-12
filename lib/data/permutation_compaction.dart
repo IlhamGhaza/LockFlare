@@ -1,48 +1,49 @@
 import 'dart:math' as math;
 class PermutationAndCompaction {
+  String steps = '';
   /// Method untuk proses enkripsi
   String encrypt(String input) {
-    print("\n=== [Permutation + Compaction - Encrypt] ===");
-    print("Input original: $input");
+    steps +=("\n=== [Permutation + Compaction - Encrypt] ===");
+    steps +=("\nInput original: $input");
 
     // Handle padding untuk input < 8 karakter
     if (input.length < 8) {
       input = input.padRight(8, '0');
-      print("Input setelah padding: $input");
+      steps +=("\nInput setelah padding: $input");
     }
 
     // Konversi ke biner
     String binaryInput = _toBinary(input);
-    print("Biner Input: $binaryInput");
+    steps +=("\nBiner Input: $binaryInput");
 
     // Initial Permutation (IP)
     String permutedBinary = _initialPermutation(binaryInput);
-    print("Biner setelah Initial Permutation: $permutedBinary");
+    steps +=("\nBiner setelah Initial Permutation: $permutedBinary");
 
     // Kompaksi - ambil setengah dari hasil permutasi
     String compactedBinary =
         permutedBinary.substring(0, permutedBinary.length ~/ 2);
-    print("Hasil setelah kompaksi: $compactedBinary");
+    steps +=("\nHasil setelah kompaksi: $compactedBinary");
 
     return compactedBinary;
   }
 
   /// Method untuk proses dekripsi
   String decrypt(String compactedInput) {
-    print("\n=== [Permutation + Compaction - Decrypt] ===");
-    print("Input terenkripsi: $compactedInput");
+    steps +=("\n=== [Permutation + Compaction - Decrypt] ===");
+    steps +=("\nInput terenkripsi: $compactedInput");
 
     // Duplikasi data yang telah dikompaksi untuk mengembalikan ke ukuran asli
     String expandedBinary = compactedInput + compactedInput;
-    print("Biner setelah ekspansi: $expandedBinary");
+    steps +=("\nBiner setelah ekspansi: $expandedBinary");
 
     // Inverse Initial Permutation
     String decryptedBinary = _inverseInitialPermutation(expandedBinary);
-    print("Biner setelah Inverse Initial Permutation: $decryptedBinary");
+    steps +=("\nBiner setelah Inverse Initial Permutation: $decryptedBinary");
 
     // Konversi kembali ke teks
     String result = _binaryToText(decryptedBinary);
-    print("Hasil dekripsi: $result");
+    steps +=("\nHasil dekripsi: $result");
 
     return result;
   }
@@ -53,7 +54,7 @@ class PermutationAndCompaction {
 
   /// Private Method: Konversi teks ke biner
   String _toBinary(String text) {
-    print("Mengonversi teks ke biner...");
+    steps +=("\nMengonversi teks ke biner...");
     return text.codeUnits
         .map((char) => char.toRadixString(2).padLeft(8, '0'))
         .join();
@@ -61,7 +62,7 @@ class PermutationAndCompaction {
 
   /// Private Method: Konversi biner ke teks
   String _binaryToText(String binary) {
-    print("Mengonversi biner ke teks...");
+    steps +=("\nMengonversi biner ke teks...");
     List<String> chunks = _chunkString(binary, 8);
     return chunks
         .map((chunk) => String.fromCharCode(int.parse(chunk, radix: 2)))

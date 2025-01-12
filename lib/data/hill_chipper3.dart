@@ -2,6 +2,7 @@ import 'dart:math';
 
 class HillCipher3 {
   List<List<int>> keyMatrix = [];
+  String steps = '';
 
   HillCipher3(String keyInput) {
     // Validasi dan buat matriks kunci
@@ -53,7 +54,7 @@ class HillCipher3 {
       return acc;
     });
 
-    print("Convert to Numerical: $plaintextNumerical");
+    steps +=("Convert to Numerical: $plaintextNumerical");
 
     // Bagi plaintext menjadi blok 3 elemen
     List<List<int>> blocks = [];
@@ -66,7 +67,7 @@ class HillCipher3 {
       blocks.add(block);
     }
 
-    print("Plaintext Blocks after Padding: $blocks");
+    steps +=("\nPlaintext Blocks after Padding: $blocks");
 
     // Proses enkripsi
     List<String> ciphertextBlocks = [];
@@ -80,20 +81,20 @@ class HillCipher3 {
         encryptedVector.add(sum % 37); // Modulo 37
       }
 
-      print("Raw Encrypted Vector (before modulo): $encryptedVector");
+      steps +=("\nRaw Encrypted Vector (before modulo): $encryptedVector");
 
       // Konversi nilai numerik ke karakter menggunakan tabel substitusi
       List<String> ciphertextBlock = encryptedVector.map((val) {
         return substitutionTable[val] ?? '';
       }).toList();
 
-      print("Encrypted Block: $ciphertextBlock");
+      steps +=("\nEncrypted Block: $ciphertextBlock");
 
       ciphertextBlocks.add(ciphertextBlock.join());
     }
 
     String ciphertext = ciphertextBlocks.join();
-    print("Ciphertext: $ciphertext");
+    steps +=("Ciphertext: $ciphertext");
     return ciphertext;
   }
 }

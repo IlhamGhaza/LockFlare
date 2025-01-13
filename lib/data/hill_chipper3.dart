@@ -1,20 +1,16 @@
 import 'dart:math';
-
 class HillCipher3 {
   List<List<int>> keyMatrix = [];
   String steps = '';
-
   HillCipher3(String keyInput) {
     // Validasi dan buat matriks kunci
     keyMatrix = _generateKeyMatrix(keyInput);
   }
-
   // Fungsi untuk membuat matriks kunci dari input pengguna
   List<List<int>> _generateKeyMatrix(String keyInput) {
     if (keyInput.length != 9 || !RegExp(r'^\d+$').hasMatch(keyInput)) {
       throw Exception("Key harus terdiri dari 9 angka.");
     }
-
     // Konversi string key menjadi list integer
     List<int> keyNumbers = keyInput.split('').map(int.parse).toList();
 
@@ -25,7 +21,6 @@ class HillCipher3 {
       keyNumbers.sublist(6, 9),
     ];
   }
-
   final Map<int, String> substitutionTable = {
     ...{for (int i = 0; i < 26; i++) i: String.fromCharCode(65 + i)}, // A-Z
     ...{
@@ -34,12 +29,8 @@ class HillCipher3 {
     36: ' ', // Spasi
     37: '.' // Titik
   };
-
-
-
   String encrypt(String input) {
     input = input.toUpperCase();
-
     // Konversi input ke nilai numerik
     List<int> plaintextNumerical = input.split('').fold<List<int>>([], (acc, char) {
       if (char == ' ') {
@@ -53,9 +44,7 @@ class HillCipher3 {
       }
       return acc;
     });
-
     steps +=("\nConvert to Numerical: $plaintextNumerical");
-
     // Bagi plaintext menjadi blok 3 elemen
     List<List<int>> blocks = [];
     for (int i = 0; i < plaintextNumerical.length; i += 3) {
@@ -66,9 +55,7 @@ class HillCipher3 {
       }
       blocks.add(block);
     }
-
     steps +=("\nPlaintext Blocks after Padding: $blocks");
-
     // Proses enkripsi
     List<String> ciphertextBlocks = [];
     for (List<int> block in blocks) {
@@ -80,19 +67,14 @@ class HillCipher3 {
         }
         encryptedVector.add(sum % 37); // Modulo 37
       }
-
       steps +=("\nRaw Encrypted Vector (before modulo): $encryptedVector");
-
       // Konversi nilai numerik ke karakter menggunakan tabel substitusi
       List<String> ciphertextBlock = encryptedVector.map((val) {
         return substitutionTable[val] ?? '';
       }).toList();
-
       steps +=("\nEncrypted Block: $ciphertextBlock");
-
       ciphertextBlocks.add(ciphertextBlock.join());
     }
-
     String ciphertext = ciphertextBlocks.join();
     steps +=("\nCiphertext: $ciphertext");
     return ciphertext;

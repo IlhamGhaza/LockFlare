@@ -6,6 +6,8 @@ import 'dart:math' as math;
 import '../config/theme/bloc/theme_cubit.dart';
 import '../config/theme/theme.dart';
 import '../data/blocking_subtitotion.dart';
+import '../data/decryption_hc2.dart';
+import '../data/decryption_hc3.dart';
 import '../data/hill_chipper2.dart';
 import '../data/hill_chipper3.dart';
 import '../data/permutation_compaction.dart';
@@ -142,7 +144,7 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             _outputText =
                 "Biner Input: $binaryInput\nHasil Compacting: $compacted";
-                _steps = pc.steps;
+            _steps = pc.steps;
           });
           break;
 
@@ -155,25 +157,7 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             _outputText =
                 "Biner Input: $binaryInput\nHasil Substitusi: $substituted";
-                _steps = bs.steps;
-          });
-          break;
-
-        case 'Hill Cipher (2x2)':
-          final hillCipher = HillCipher2(keyInput);
-          result = hillCipher.encrypt(input);
-          setState(() {
-            _outputText = "Hasil Hill Cipher (2x2): $result";
-            _steps = hillCipher.steps;
-          });
-          break;
-
-        case 'Hill Cipher (3x3)':
-          final hillCipher = HillCipher3(keyInput);
-          result = hillCipher.encrypt(input);
-          setState(() {
-            _outputText = "Hasil Hill Cipher (3x3): $result";
-            _steps = hillCipher.steps;
+            _steps = bs.steps;
           });
           break;
 
@@ -189,6 +173,42 @@ class _HomePageState extends State<HomePage> {
             _steps = sc.steps;
           });
           break;
+
+        case 'Hill Cipher (2x2)':
+          final hillCipher = HillCipher2(keyInput);
+          result = hillCipher.encrypt(input);
+          setState(() {
+            _outputText = "Hasil Hill Cipher (2x2): $result";
+            _steps = hillCipher.steps;
+          });
+          break;
+
+        case '[Decryption] Hill Cipher (2x2)':
+          final hillCipher = DecryptionHillCipher2(keyInput);
+          result = hillCipher.decrypt(input);
+          setState(() {
+            _outputText = "Hasil Hill Cipher (2x2): $result";
+            _steps = hillCipher.steps;
+          });
+          break;
+
+        case 'Hill Cipher (3x3)':
+          final hillCipher = HillCipher3(keyInput);
+          result = hillCipher.encrypt(input);
+          setState(() {
+            _outputText = "Hasil Hill Cipher (3x3): $result";
+            _steps = hillCipher.steps;
+          });
+          break;
+
+        case '[Decryption] Hill Cipher (3x3)':
+        final hillCipher = DecryptionHillCipher3(keyInput);
+        result = hillCipher.decrypt(input);
+        setState(() {
+          _outputText = "Hasil Hill Cipher (3x3): $result";
+          _steps = hillCipher.steps;
+        });
+        break;
 
         default:
           setState(() {
@@ -466,9 +486,11 @@ class _HomePageState extends State<HomePage> {
                                       'Substitusi + Permutasi',
                                       'Permutasi + Compaction',
                                       'Blocking + Substitusi',
-                                      'Hill Cipher (2x2)',
-                                      'Hill Cipher (3x3)',
                                       'Substitusi + Compaction',
+                                      'Hill Cipher (2x2)',
+                                      '[Decryption] Hill Cipher (2x2)',
+                                      'Hill Cipher (3x3)',
+                                      '[Decryption] Hill Cipher (3x3)',
                                     ].map((algorithm) {
                                       return DropdownMenuItem(
                                         value: algorithm,

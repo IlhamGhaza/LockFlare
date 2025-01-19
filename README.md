@@ -1,14 +1,14 @@
-# SKTI Gundar
+# LockFlare
 
 <a href="https://www.buymeacoffee.com/IlhamGhaza" target="_blank">
     <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee">
 </a></br>
 
-SKTI Gundar is a Flutter application designed to implement and demonstrate various cryptographic algorithms and techniques. This project aims to educate users about different encryption methods by providing practical implementations within a mobile application.
+LockFlare is a Flutter application designed to implement and demonstrate various cryptographic algorithms and techniques. This project aims to educate users about different encryption methods by providing practical implementations within a mobile application.
 
 ## Table of Contents
 
-- [SKTI Gundar](#skti-gundar)
+- [LockFlare](#LockFlare)
   - [Table of Contents](#table-of-contents)
   - [Project Structure](#project-structure)
   - [Getting Started](#getting-started)
@@ -33,6 +33,8 @@ lib/
 │       └── theme.dart
 ├── data/
 │   ├── blocking_substitution.dart
+│   ├── decryption_hc2.dart
+│   ├── decryption_hc3.dart
 │   ├── github_service.dart
 │   ├── hill_cipher2.dart
 │   ├── hill_cipher3.dart
@@ -65,13 +67,13 @@ Before running the application, ensure that the following tools are installed on
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/IlhamGhaza/skti_gundar.git
+   git clone https://github.com/IlhamGhaza/LockFlare.git
    ```
 
 2. **Navigate to the project directory**:
 
    ```bash
-   cd skti_gundar
+   cd LockFlare
    ```
 
 3. **Install dependencies**:
